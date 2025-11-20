@@ -90,6 +90,7 @@ app.post('/api/send-direct', async (req, res) => {
 留言内容：
 ${content}
 
+
 ===== 回复说明 =====
 直接回复此邮件即可联系到留言用户`,
             // HTML格式正文（更美观，支持换行、加粗）
@@ -129,3 +130,32 @@ app.listen(PORT, () => {
     console.log(`后端服务已启动，访问地址：http://localhost:${PORT}`);
     console.log(`测试接口：http://localhost:${PORT}/api/test`);
 });
+// 原错误配置（发件人是用户邮箱）
+// from: `"用户反馈" <${senderEmail}>`
+
+// 新配置（发件人改为你的QQ邮箱，与SMTP认证账号一致）
+const mailOptions = {
+    from: `"用户留言反馈" <${process.env.QQ_EMAIL}>`, // 改为你的QQ邮箱（认证账号）
+    to: process.env.TARGET_EMAIL, // 你的目标邮箱（不变）
+    subject: `【用户留言】来自 ${senderEmail}`, // 主题中显示用户邮箱，方便识别
+    // 文本格式正文（清晰标注用户邮箱）
+    text: `===== 留言详情 =====
+用户QQ邮箱（可直接回复）：${senderEmail}
+留言时间：${new Date().toLocaleString()}
+留言内容：
+${content}
+
+===== 回复说明 =====
+直接回复此邮件，收件人会自动填写为用户的QQ邮箱`,
+    // HTML格式正文（更美观，支持换行）
+    html: `
+        <h3>===== 留言详情 =====</h3>
+        <p><strong>用户QQ邮箱（可直接回复）：</strong>${senderEmail}</p>
+        <p><strong>留言时间：</strong>${new Date().toLocaleString()}</p>
+        <p><strong>留言内容：</strong></p>
+        <div style="background-color: #f5f7fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+            ${content.replace(/\n/g, '<br>')}
+        </div>
+        <p><strong>回复说明：</strong>直接回复此邮件，即可联系到留言用户</p>
+    `
+};
