@@ -2,9 +2,9 @@
   "name": "message-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js", // 入口文件指定为 server.js（关键）
+  "main": "server.js", 
   "scripts": {
-    "start": "node server.js", // 添加这行：启动命令
+    "start": "node server.js", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
